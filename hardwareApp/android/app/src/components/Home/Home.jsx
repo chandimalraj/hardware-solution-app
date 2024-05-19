@@ -14,14 +14,16 @@ import addCustomer from '../../assets/icons/New.png';
 import customers from '../../assets/icons/Supplier.png';
 import search from '../../assets/icons/Search.png';
 import whatsApp from '../../assets/icons/WhatsApp.png';
+import cart from '../../assets/icons/Cart.png';
 import LinearGradient from 'react-native-linear-gradient';
 
 const {height, width} = Dimensions.get('window');
 
 export default function Home({navigation}) {
   const menuItems = [
-    {name: 'Categories', icon: tools, link: 'Catogeries'},
-    {name: 'New Order', icon: addOrder,link: 'SelectCustomer'},
+    // {name: 'Categories', icon: tools, link: 'Catogeries'},
+    {name: 'New Order', icon: addOrder,link: 'Catogeries'},
+    {name: 'Current Order', icon: cart,link: 'Order'},
     {name: 'New Customer', icon: addCustomer},
     {name: 'Customers', icon: customers},
     {name: 'Search Items', icon: search},

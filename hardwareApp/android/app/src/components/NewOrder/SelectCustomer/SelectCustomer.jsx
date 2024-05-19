@@ -6,6 +6,7 @@ import {
   StyleSheet,
   Text,
   TextInput,
+  TouchableHighlight,
   TouchableOpacity,
   View,
 } from 'react-native';
@@ -14,13 +15,15 @@ const {height, width} = Dimensions.get('window');
 
 const dataItemView = ({item}) => {
   return (
-    <View style={styles.itemView}>
-      <Text style={styles.itemTxt}>{item.customerName}</Text>
-    </View>
+    <TouchableOpacity>
+      <View style={styles.itemView}>
+        <Text style={styles.itemTxt}>{item.customerName}</Text>
+      </View>
+    </TouchableOpacity>
   );
 };
 
-export default function SelectCustomer() {
+export default function SelectCustomer({navigation}) {
   const data = [
     {
       customerName: 'ABC Hardware ,No 49/A Kandy Road',
@@ -71,11 +74,20 @@ export default function SelectCustomer() {
       customerName: 'ABC Hardware ,No 49/A Kandy Road',
     },
   ];
+
+  const redirectToNewCustomer = () => {
+    navigation.navigate('NewCustomer');
+  };
   return (
     <View style={styles.maincontainer}>
-      <TextInput style={styles.textInput} placeholder="Search Customer" />
+      <TextInput
+        style={styles.textInput}
+        placeholder="Search Customer"
+        InputProps={{disableUnderline: true}}
+        underlineColor="transparent"
+      />
       <Text style={styles.buttonText}>Or</Text>
-      <TouchableOpacity style={styles.cardbutton} onPress={() => login()}>
+      <TouchableOpacity style={styles.cardbutton} onPress={() => redirectToNewCustomer()}>
         <LinearGradient
           // start={{x: 0.0, y: 0.25}}
           // end={{x: 0.5, y: 1.0}}
@@ -187,16 +199,16 @@ const styles = StyleSheet.create({
     width: '90%',
     //paddingBottom:40
   },
-//   flatList: {paddingBottom: 50, },
+  //   flatList: {paddingBottom: 50, },
   itemView: {
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: '#fff',
     borderRadius: 10,
-    elevation: 5,
+    //elevation: 5,
     shadowColor: '#000',
     shadowOffset: {width: 0, height: 2},
-    shadowOpacity: 0.25,
+    //shadowOpacity: 0.25,
     shadowRadius: 3.84,
     padding: 8,
     marginBottom: 5,
@@ -208,7 +220,7 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     color: 'black',
   },
-  loadbutton:{
+  loadbutton: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
@@ -220,7 +232,6 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     padding: 5,
-    
     width: width * 0.5,
-  }
+  },
 });

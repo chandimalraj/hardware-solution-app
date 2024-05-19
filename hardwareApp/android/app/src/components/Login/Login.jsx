@@ -13,6 +13,7 @@ import {
 } from 'react-native';
 import Modal from 'react-native-modal';
 import LinearGradient from 'react-native-linear-gradient';
+import {userLogin} from '../../services/authService';
 
 const {height, width} = Dimensions.get('window');
 
@@ -38,14 +39,25 @@ export default function Login({navigation}) {
     setModalVisible(false);
   };
 
-  const login = () => {
-    if (userName.length == 0 || userpassword.length == 0) {
+  const login = async () => {
+    try {
+      if (userName.length == 0 || userpassword.length == 0) {
+        setModalVisible(true);
+        return;
+      } else {
+        //login process
+        console.log("login")
+        const response = await userLogin({
+          username: userName,
+          password: userpassword,
+        });
+        console.log(response)
+        //navigate to the home screen
+        navigation.navigate('Home');
+      }
+    } catch (error) {
+      console.log(error)
       setModalVisible(true);
-      return;
-    } else {
-      //login process
-      //navigate to the home screen
-      navigation.navigate('Home');
     }
   };
 
@@ -66,6 +78,8 @@ export default function Login({navigation}) {
             onFocus={handleFocus1}
             onBlur={handleBlur1}
             onChangeText={text => setUserName(text)}
+            InputProps={{disableUnderline: true}}
+            underlineColor="transparent"
           />
           <TextInput
             style={[styles.card, isFocused2 && styles.in2]}

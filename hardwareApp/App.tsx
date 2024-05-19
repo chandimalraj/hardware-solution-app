@@ -31,6 +31,11 @@ import Home from './android/app/src/components/Home/Home';
 import Categories from './android/app/src/components/Home/Categories/Categories';
 import Dynamic from './android/app/src/components/Home/Categories/DynamicScreen/Dynamic';
 import SelectCustomer from './android/app/src/components/NewOrder/SelectCustomer/SelectCustomer';
+import NewCustomer from './android/app/src/components/NewCustomer/NewCustomer';
+import { Provider } from 'react-redux';
+import { store } from './android/app/src/redux/store';
+import ItemScreen from './android/app/src/components/Home/Categories/ItemScreen/ItemScreen';
+import Order from './android/app/src/components/Home/Order/Order';
 
 const Stack = createNativeStackNavigator();
 
@@ -42,16 +47,17 @@ function App(): React.JSX.Element {
   };
 
   return (
+    
     <NavigationContainer>
       <Stack.Navigator>
-        <Stack.Screen
+        {/* <Stack.Screen
           name="Login"
           component={Login}
           options={{
             headerTitleAlign: 'center',
             headerShown: false, // Center-align the header title
           }}
-        />
+        /> */}
         <Stack.Screen
           name="Home"
           component={Home}
@@ -76,6 +82,14 @@ function App(): React.JSX.Element {
             headerShown: false, // Center-align the header title
           }}
         />
+         <Stack.Screen
+          name="Item"
+          component={ItemScreen}
+          options={{
+            headerTitleAlign: 'center',
+            headerShown: false, // Center-align the header title
+          }}
+        />
         <Stack.Screen
           name="SelectCustomer"
           component={SelectCustomer}
@@ -84,8 +98,25 @@ function App(): React.JSX.Element {
             headerShown: false, // Center-align the header title
           }}
         />
+        <Stack.Screen
+          name="NewCustomer"
+          component={NewCustomer}
+          options={{
+            headerTitleAlign: 'center',
+            headerShown: false, // Center-align the header title
+          }}
+        />
+        <Stack.Screen
+          name="Order"
+          component={Order}
+          options={{
+            headerTitleAlign: 'center',
+            headerShown: false, // Center-align the header title
+          }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
+   
   );
 }
 
