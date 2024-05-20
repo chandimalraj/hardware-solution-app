@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   Dimensions,
   FlatList,
@@ -6,78 +6,78 @@ import {
   StyleSheet,
   Text,
   TextInput,
+  ToastAndroid,
   TouchableHighlight,
   TouchableOpacity,
   View,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
+import {
+  getCustomersByName,
+  getPaginatedCustomers,
+} from '../../services/customerService';
+import { useDispatch } from 'react-redux';
+import { addCustomer } from '../../redux/actions/customerAction';
 const {height, width} = Dimensions.get('window');
 
-const dataItemView = ({item}) => {
+const DataItemView = ({item, goToCategories}) => {
   return (
-    <TouchableOpacity>
+    <TouchableOpacity onPress={() => goToCategories(item)}>
       <View style={styles.itemView}>
-        <Text style={styles.itemTxt}>{item.customerName}</Text>
+        <Text style={styles.itemTxt}>{item.customer_name}</Text>
+        <Text style={styles.itemTxt}>{item.customer_address}</Text>
       </View>
     </TouchableOpacity>
   );
 };
 
 export default function SelectCustomer({navigation}) {
-  const data = [
-    {
-      customerName: 'ABC Hardware ,No 49/A Kandy Road',
-    },
-    {
-      customerName: 'ABC Hardware ,No 49/A Kandy Road',
-    },
-    {
-      customerName: 'ABC Hardware ,No 49/A Kandy Road',
-    },
-    {
-      customerName: 'ABC Hardware ,No 49/A Kandy Road',
-    },
-    {
-      customerName: 'ABC Hardware ,No 49/A Kandy Road',
-    },
-    {
-      customerName: 'ABC Hardware ,No 49/A Kandy Road',
-    },
-    {
-      customerName: 'ABC Hardware ,No 49/A Kandy Road',
-    },
-    {
-      customerName: 'ABC Hardware ,No 49/A Kandy Road',
-    },
-    {
-      customerName: 'ABC Hardware ,No 49/A Kandy Road',
-    },
-    {
-      customerName: 'ABC Hardware ,No 49/A Kandy Road',
-    },
-    {
-      customerName: 'ABC Hardware ,No 49/A Kandy Road',
-    },
-    {
-      customerName: 'ABC Hardware ,No 49/A Kandy Road',
-    },
-    {
-      customerName: 'ABC Hardware ,No 49/A Kandy Road',
-    },
-    {
-      customerName: 'ABC Hardware ,No 49/A Kandy Road',
-    },
-    {
-      customerName: 'ABC Hardware ,No 49/A Kandy Road',
-    },
-    {
-      customerName: 'ABC Hardware ,No 49/A Kandy Road',
-    },
-  ];
+  const [customers, setCustomers] = useState([]);
+  const [page, setPage] = useState(1);
+  const [name, setName] = useState('');
+
+  const dispatch = useDispatch();
+
+  const getCustomers = async page => {
+    try {
+      const response = await getPaginatedCustomers(page);
+      console.log(response);
+      setCustomers([...customers, ...response.data?.data]);
+      ToastAndroid.show('Customers Load Successfully', ToastAndroid.SHORT);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const loadMore = () => {
+    setPage(page + 1);
+    getCustomers(page + 1);
+  };
+
+  useEffect(() => {
+    getCustomers(page);
+  }, []);
 
   const redirectToNewCustomer = () => {
     navigation.navigate('NewCustomer');
   };
+
+  const redirectToCategories = (customer) => {
+    dispatch(addCustomer(customer))
+    navigation.navigate('Catogeries');
+  };
+
+  const searchCustomer = async name => {
+    console.log(name)
+    try {
+      const response = await getCustomersByName(name);
+     // console.log(response);
+      setCustomers(response.data?.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <View style={styles.maincontainer}>
       <TextInput
@@ -85,9 +85,12 @@ export default function SelectCustomer({navigation}) {
         placeholder="Search Customer"
         InputProps={{disableUnderline: true}}
         underlineColor="transparent"
+        onChangeText={text => searchCustomer(text)}
       />
       <Text style={styles.buttonText}>Or</Text>
-      <TouchableOpacity style={styles.cardbutton} onPress={() => redirectToNewCustomer()}>
+      <TouchableOpacity
+        style={styles.cardbutton}
+        onPress={() => redirectToNewCustomer()}>
         <LinearGradient
           // start={{x: 0.0, y: 0.25}}
           // end={{x: 0.5, y: 1.0}}
@@ -95,7 +98,7 @@ export default function SelectCustomer({navigation}) {
           colors={['#4c669f', '#3b5998', '#192f6a']}
           style={styles.linearGradient}>
           <Image
-            source={require('../../../assets/icons/Add.png')}
+            source={require('../../assets/icons/Add.png')}
             style={{width: 25, height: 25}}
           />
           <Text style={styles.btnText}>Enter New Customer</Text>
@@ -103,13 +106,17 @@ export default function SelectCustomer({navigation}) {
       </TouchableOpacity>
       <View style={styles.listContainer}>
         <FlatList
-          renderItem={dataItemView}
-          data={data}
+          renderItem={({item}) => {
+            return (
+              <DataItemView item={item} goToCategories={redirectToCategories} />
+            );
+          }}
+          data={customers}
           keyExtractor={(item, index) => index.toString()}
           style={styles.flatList}
         />
       </View>
-      <TouchableOpacity style={styles.loadbutton} onPress={() => login()}>
+      <TouchableOpacity style={styles.loadbutton} onPress={() => loadMore()}>
         <LinearGradient
           // start={{x: 0.0, y: 0.25}}
           // end={{x: 0.5, y: 1.0}}
@@ -117,7 +124,7 @@ export default function SelectCustomer({navigation}) {
           colors={['#4c669f', '#3b5998', '#192f6a']}
           style={styles.linearGradient}>
           <Image
-            source={require('../../../assets/icons/Load.png')}
+            source={require('../../assets/icons/Load.png')}
             style={{width: 25, height: 25}}
           />
           <Text style={styles.btnText}>Load More</Text>
@@ -201,8 +208,8 @@ const styles = StyleSheet.create({
   },
   //   flatList: {paddingBottom: 50, },
   itemView: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: 'column',
+    alignItems: 'flex-start',
     backgroundColor: '#fff',
     borderRadius: 10,
     //elevation: 5,

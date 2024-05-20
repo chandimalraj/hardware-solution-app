@@ -22,7 +22,7 @@ const {height, width} = Dimensions.get('window');
 export default function Home({navigation}) {
   const menuItems = [
     // {name: 'Categories', icon: tools, link: 'Catogeries'},
-    {name: 'New Order', icon: addOrder,link: 'Catogeries'},
+    {name: 'New Order', icon: addOrder,link: 'SelectCustomer'},
     {name: 'Current Order', icon: cart,link: 'Order'},
     {name: 'New Customer', icon: addCustomer},
     {name: 'Customers', icon: customers},

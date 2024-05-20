@@ -67,7 +67,16 @@ export default function orderReducer(state = initialState.order, action) {
         ...state,
         items: filteredItems,
       };
+      case types.ADD_CUSTOMER:
+        console.log({
+          ...state,
+          customer:action.payload,
+        });
 
+        return {
+          ...state,
+          customer:action.payload,
+        };
     default:
       return state;
   }

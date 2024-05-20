@@ -30,7 +30,7 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import Home from './android/app/src/components/Home/Home';
 import Categories from './android/app/src/components/Home/Categories/Categories';
 import Dynamic from './android/app/src/components/Home/Categories/DynamicScreen/Dynamic';
-import SelectCustomer from './android/app/src/components/NewOrder/SelectCustomer/SelectCustomer';
+import SelectCustomer from './android/app/src/components/SelectCustomer/SelectCustomer';
 import NewCustomer from './android/app/src/components/NewCustomer/NewCustomer';
 import { Provider } from 'react-redux';
 import { store } from './android/app/src/redux/store';
