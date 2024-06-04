@@ -68,10 +68,11 @@ export default function ItemScreen({navigation}) {
       <View style={styles.itemView}>
         <Image
           source={{uri: item?.image_url}}
-          style={{width: 250, height: 250}}
+          style={{width: width*0.8, height: width*0.52}}
         />
         <View style={styles.infoContainer}>
           <Text style={styles.itemTxt}>{item?.name}</Text>
+          <Text style={styles.unitTxt}>{item?.unit}</Text>
           <Text style={styles.itemPrice}>
             Rs {parseFloat(item?.price).toFixed(2)}
           </Text>
@@ -173,7 +174,7 @@ const styles = StyleSheet.create({
     padding: 8,
     marginBottom: 5,
     width: width * 0.9,
-    height: 300,
+    // height: 300,
   },
   itemTxt: {
     fontSize: 17,
@@ -181,6 +182,12 @@ const styles = StyleSheet.create({
     color: 'black',
     marginRight: 10,
     marginBottom: 10,
+  },
+  unitTxt: {
+    fontSize: 17,
+    fontWeight: '700',
+    color: 'gray',
+    marginRight: 10,
   },
   itemPrice: {fontSize: 18, fontWeight: '700', color: 'red'},
   loadbutton: {

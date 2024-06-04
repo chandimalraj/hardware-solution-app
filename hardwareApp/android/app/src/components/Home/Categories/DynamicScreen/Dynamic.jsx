@@ -1,6 +1,9 @@
 import {useRoute} from '@react-navigation/native';
 import React, {useEffect, useState} from 'react';
-import {getItemsByCategory} from '../../../../services/itemService';
+import {
+  getItemsByCategory,
+  getItemsByName,
+} from '../../../../services/itemService';
 import {
   Dimensions,
   FlatList,
@@ -11,7 +14,6 @@ import {
   TouchableHighlight,
   TouchableOpacity,
   View,
-  
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import {useSelector, useDispatch} from 'react-redux';
@@ -37,18 +39,21 @@ const DataItemView = ({item, navigation}) => {
       <View style={styles.itemView}>
         <Image
           source={{uri: item?.image_url}}
-          style={{width: '100%', height: 250}}
+          style={{width: width * 0.8, height: width * 0.52}}
         />
         <View style={styles.infoContainer}>
           <Text style={styles.itemTxt}>{item?.name}</Text>
-          <Text style={styles.itemPrice}>Rs {parseFloat(item?.price).toFixed(2)}</Text>
+          <Text style={styles.unitTxt}>{item?.unit}</Text>
+          <Text style={styles.itemPrice}>
+            Rs {parseFloat(item?.price).toFixed(2)}
+          </Text>
         </View>
       </View>
     </TouchableOpacity>
   );
 };
 
-export default function Dynamic({ navigation }) {
+export default function Dynamic({navigation}) {
   const route = useRoute();
   const {category} = route.params;
   const [page, setPage] = useState(1);
@@ -70,6 +75,15 @@ export default function Dynamic({ navigation }) {
       console.log(error);
     }
   };
+  const searchItems = async text => {
+    try {
+      console.log(category.toUpperCase());
+      const response = await getItemsByName(text, category.toUpperCase());
+      setData(response?.data?.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <View style={styles.maincontainer}>
       <TextInput
@@ -77,16 +91,20 @@ export default function Dynamic({ navigation }) {
         placeholder={`Search ${category} Items`}
         InputProps={{disableUnderline: true}}
         underlineColor="transparent"
+        onChangeText={text => searchItems(text)}
       />
       <View style={styles.listContainer}>
         <FlatList
           renderItem={({item}) => (
-            <DataItemView item={item} dispatch={dispatch} navigation={navigation}/>
+            <DataItemView
+              item={item}
+              dispatch={dispatch}
+              navigation={navigation}
+            />
           )}
           data={data}
           keyExtractor={(item, index) => index.toString()}
           style={styles.flatList}
-          
         />
       </View>
     </View>
@@ -176,11 +194,11 @@ const styles = StyleSheet.create({
     shadowOffset: {width: 0, height: 2},
     //shadowOpacity: 0.25,
     shadowRadius: 3.84,
-    padding: 8,
+    // padding: 8,
     marginBottom: 5,
     width: width * 0.9,
-    height: 300,
-   
+    // height: 300,
+
     // borderColor:'#296ce7',
     // borderWidth:5
   },
@@ -188,6 +206,12 @@ const styles = StyleSheet.create({
     fontSize: 17,
     fontWeight: '700',
     color: 'black',
+    marginRight: 10,
+  },
+  unitTxt: {
+    fontSize: 17,
+    fontWeight: '700',
+    color: 'gray',
     marginRight: 10,
   },
   itemPrice: {fontSize: 18, fontWeight: '700', color: 'red'},

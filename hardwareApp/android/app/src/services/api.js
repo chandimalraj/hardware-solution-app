@@ -15,6 +15,7 @@ axiosPrivate.interceptors.request.use(
     if (token) {
       config.headers["Authorization"] = `Bearer ${token}`;
       config.headers["Access-Contol-Allow-Origin"] = "*";
+      
     }
     return config;
   },
@@ -23,7 +24,7 @@ axiosPrivate.interceptors.request.use(
   },
 );
 
-const getToken = async () => {
+export const getToken = async () => {
   try {
     const token = await AsyncStorage.getItem('token');
     

@@ -19,6 +19,9 @@ import {
   GestureHandlerRootView,
 } from 'react-native-gesture-handler';
 import {removeItem} from '../../../redux/actions/itemAction';
+import {getUserId} from '../../../utils/helpers/permission';
+import {createOrder} from '../../../services/orderService';
+import { removeOrder } from '../../../redux/actions/orderAction';
 const {height, width} = Dimensions.get('window');
 
 export default function Order({navigation}) {
@@ -77,6 +80,35 @@ export default function Order({navigation}) {
     });
 
     return x.toFixed(2);
+  };
+
+  const addOrder = async () => {
+    if (items?.length > 0 && customer) {
+      const orderItems = items.map((item, index) => {
+        return {
+          itemId: item?.id,
+          quantity: item?.quantity,
+        };
+      });
+      try {
+        const userId = await getUserId();
+        const order = {
+          paymentType: "CASH",
+          customerId: customer?.id,
+          salesrepId: userId,
+          order_items: orderItems,
+        };
+        console.log(order);
+        const response = await createOrder(order);
+        console.log(response);
+        ToastAndroid.show('Order Created Successfully', ToastAndroid.SHORT);
+        dispatch(removeOrder())
+      } catch (error) {
+        console.log(error);
+      }
+    } else {
+      ToastAndroid.show('There is no items in order !', ToastAndroid.SHORT);
+    }
   };
 
   return (
@@ -144,7 +176,7 @@ export default function Order({navigation}) {
             <Text style={styles.buttonText}>Add More</Text>
           </LinearGradient>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.cardbutton}>
+        <TouchableOpacity style={styles.cardbutton} onPress={addOrder}>
           <LinearGradient
             // start={{x: 0.0, y: 0.25}}
             // end={{x: 0.5, y: 1.0}}
@@ -152,7 +184,7 @@ export default function Order({navigation}) {
             colors={['#4c669f', '#3b5998', '#192f6a']}
             style={styles.linearGradient}>
             <Image
-              source={require('../../../assets/icons/Add.png')}
+              source={require('../../../assets/icons/CheckMark.png')}
               style={{width: 30, height: 30}}
             />
             <Text style={styles.buttonText}>Submit</Text>

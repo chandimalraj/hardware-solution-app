@@ -77,6 +77,17 @@ export default function orderReducer(state = initialState.order, action) {
           ...state,
           customer:action.payload,
         };
+        case types.REMOVE_ORDER:
+        console.log({
+          ...state,
+          customer:action.payload,
+        });
+
+        return {
+          ...state,
+          customer:null,
+          items:[]
+        };
     default:
       return state;
   }
